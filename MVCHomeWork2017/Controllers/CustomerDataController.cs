@@ -15,25 +15,39 @@ namespace MVCHomeWork2017.Controllers
         private CustomerEntities db = new CustomerEntities();
 
         // GET: CustomerData
-        public ActionResult Index()
-        {
-            var data = db.客戶資料.Where(p=>!p.IsDelete).ToList();
-            return View(data);
-        }
-        [HttpPost]
+        //public ActionResult Index()
+        //{
+        //    var data = db.客戶資料.Where(p=>!p.IsDelete).ToList();
+        //    return View(data);
+        //}
+        //[HttpPost]
+        //public ActionResult Index(string keyWord)
+        //{
+        //    var all = db.客戶資料.AsQueryable();
+        //    var data = all
+        //        .Where(p => p.客戶名稱.Contains(keyWord.Trim()) && !p.IsDelete)                
+        //        .OrderByDescending(p => p.Id).ToList();            
+        //    return View(data);
+        //}
+
+        
         public ActionResult Index(string keyWord)
         {
-            var all = db.客戶資料.AsQueryable();
-            var data = all
-                .Where(p => p.客戶名稱.Contains(keyWord.Trim()) && !p.IsDelete
-                //|| p.客戶聯絡人.Contains(keyWord)
-                )
-                //.Where(p => p.Active == true && p.ProductName.Contains("Black"))
-                .OrderByDescending(p => p.Id).ToList();
-
-            
-            return View(data);
+            if (!String.IsNullOrEmpty(keyWord))
+            {
+                var all = db.客戶資料.AsQueryable();
+                var data = all
+                    .Where(p => p.客戶名稱.Contains(keyWord.Trim()) && !p.IsDelete)
+                    .OrderByDescending(p => p.Id).ToList();
+                return View(data);
+            }
+            else
+            {
+                var data = db.客戶資料.Where(p => !p.IsDelete).ToList();
+                return View(data);
+            }
         }
+
 
         // GET: CustomerData/Details/5
         public ActionResult Details(int? id)

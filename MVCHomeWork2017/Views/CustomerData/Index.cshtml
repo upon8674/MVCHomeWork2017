@@ -12,14 +12,24 @@
 <table class="table">
     <tr>
         <td style="border-top:none;">
-            @using (Html.BeginForm("Index", "CustomerData", FormMethod.Post))
+            @*@using (Html.BeginForm("Index", "CustomerData", FormMethod.Post))
             {
                 <div>
                     @Html.TextBox("keyWord", "",new { @class = "form-control" } )
                     <br/><input type="submit" value="搜尋" class="btn btn-default" />
                 </div>
                 
+            }*@
+
+            @using (Html.BeginForm("Index", "CustomerData", FormMethod.Get))
+            {
+                <div>
+                    @Html.TextBox("keyWord", "", new { @class = "form-control" })
+                    <br /><input type="submit" value="搜尋" class="btn btn-default" />
+                </div>
+
             }
+
             <br />
         </td>
     </tr>
