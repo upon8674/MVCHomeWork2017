@@ -17,7 +17,7 @@ namespace MVCHomeWork2017.Controllers
         // GET: CustomerBank
         public ActionResult Index()
         {
-            var 客戶銀行資訊 = db.客戶銀行資訊.Include(客 => 客.客戶資料);
+            var 客戶銀行資訊 = db.客戶銀行資訊.Include(客 => 客.客戶資料).Where(p=>!p.IsDelete);
             return View(客戶銀行資訊.ToList());
         }
         [HttpPost]
@@ -26,6 +26,7 @@ namespace MVCHomeWork2017.Controllers
             var all = db.客戶銀行資訊.AsQueryable();
             var data = all
                 .Where(p => p.銀行名稱.Contains(keyWord.Trim())
+                && !p.IsDelete
                 //|| p.客戶聯絡人.Contains(keyWord)
                 )
                 //.Where(p => p.Active == true && p.ProductName.Contains("Black"))
@@ -128,9 +129,11 @@ namespace MVCHomeWork2017.Controllers
         [ValidateAntiForgeryToken]
         public ActionResult DeleteConfirmed(int id)
         {
-            客戶銀行資訊 客戶銀行資訊 = db.客戶銀行資訊.Find(id);
-            db.客戶銀行資訊.Remove(客戶銀行資訊);
-            db.SaveChanges();
+            客戶銀行資訊 bankData = db.客戶銀行資訊.Find(id);
+            bankData.IsDelete = true;
+            db.Entry(bankData).State = EntityState.Modified;
+            db.SaveChanges();          
+
             return RedirectToAction("Index");
         }
 

@@ -65,8 +65,18 @@
         @Html.AntiForgeryToken()
 
         <div class="form-actions no-color">
-            <input type="submit" value="Delete" class="btn btn-default" /> |
+            <input type="submit" value="Delete" class="btn btn-default"   /> |
             @Html.ActionLink("Back to List", "Index")
+           
         </div>
     }
+    <script>
+    function Confirm_Form()
+    {
+        if (!confirm("您確定要刪除嗎?")) {
+            alert('不刪');
+            return false;
+        }
+    }
+    </script>
 </div>

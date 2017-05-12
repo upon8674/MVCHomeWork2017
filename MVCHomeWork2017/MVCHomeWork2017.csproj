@@ -173,6 +173,7 @@
     <Compile Include="Controllers\CustomerBankController.cs" />
     <Compile Include="Controllers\CustomerContactsController.cs" />
     <Compile Include="Controllers\CustomerDataController.cs" />
+    <Compile Include="Controllers\CustomerViewsController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Controllers\ManageController.cs" />
     <Compile Include="Global.asax.cs">
@@ -193,6 +194,9 @@
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
       <DependentUpon>Customer.edmx</DependentUpon>
+    </Compile>
+    <Compile Include="Models\CustomerView.cs">
+      <DependentUpon>Customer.tt</DependentUpon>
     </Compile>
     <Compile Include="Models\EFGeneratePartialClass.cs">
       <AutoGen>True</AutoGen>
@@ -323,6 +327,7 @@
     <Content Include="Views\CustomerContacts\Details.cshtml" />
     <Content Include="Views\CustomerContacts\Edit.cshtml" />
     <Content Include="Views\CustomerContacts\Index.cshtml" />
+    <Content Include="Views\CustomerViews\Index.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Service Include="{508349B6-6B84-4DF5-91F0-309BEEBAD82D}" />

@@ -17,7 +17,7 @@ namespace MVCHomeWork2017.Controllers
         // GET: CustomerContacts
         public ActionResult Index()
         {
-            var 客戶聯絡人 = db.客戶聯絡人.Include(客 => 客.客戶資料);
+            var 客戶聯絡人 = db.客戶聯絡人.Include(客 => 客.客戶資料).Where(p=>!p.IsDelete);
             return View(客戶聯絡人.ToList());
         }
         [HttpPost]
@@ -26,9 +26,7 @@ namespace MVCHomeWork2017.Controllers
             var all = db.客戶聯絡人.AsQueryable();
             var data = all
                 .Where(p => p.姓名.Contains(keyWord.Trim())
-                //|| p.客戶聯絡人.Contains(keyWord)
-                )
-                //.Where(p => p.Active == true && p.ProductName.Contains("Black"))
+                && !p.IsDelete)                
                 .OrderByDescending(p => p.Id).ToList();
 
 
@@ -128,8 +126,9 @@ namespace MVCHomeWork2017.Controllers
         [ValidateAntiForgeryToken]
         public ActionResult DeleteConfirmed(int id)
         {
-            客戶聯絡人 客戶聯絡人 = db.客戶聯絡人.Find(id);
-            db.客戶聯絡人.Remove(客戶聯絡人);
+            客戶聯絡人 contactData = db.客戶聯絡人.Find(id);
+            contactData.IsDelete = true;
+            db.Entry(contactData).State = EntityState.Modified;
             db.SaveChanges();
             return RedirectToAction("Index");
         }
