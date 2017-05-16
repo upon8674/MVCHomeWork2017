@@ -13,28 +13,14 @@ namespace MVCHomeWork2017.Controllers
     public class CustomerBankController : Controller
     {
         private CustomerEntities db = new CustomerEntities();
+        客戶銀行資訊Repository repo = RepositoryHelper.Get客戶銀行資訊Repository();
 
         // GET: CustomerBank
-        public ActionResult Index()
-        {
-            var 客戶銀行資訊 = db.客戶銀行資訊.Include(客 => 客.客戶資料).Where(p=>!p.IsDelete);
-            return View(客戶銀行資訊.ToList());
-        }
-        [HttpPost]
         public ActionResult Index(string keyWord)
         {
-            var all = db.客戶銀行資訊.AsQueryable();
-            var data = all
-                .Where(p => p.銀行名稱.Contains(keyWord.Trim())
-                && !p.IsDelete
-                //|| p.客戶聯絡人.Contains(keyWord)
-                )
-                //.Where(p => p.Active == true && p.ProductName.Contains("Black"))
-                .OrderByDescending(p => p.Id).ToList();
-
-
-            return View(data);
+            return View(repo.GetDataList(keyWord));
         }
+      
 
         // GET: CustomerBank/Details/5
         public ActionResult Details(int? id)
@@ -43,12 +29,12 @@ namespace MVCHomeWork2017.Controllers
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            客戶銀行資訊 客戶銀行資訊 = db.客戶銀行資訊.Find(id);
-            if (客戶銀行資訊 == null)
+            var data = repo.GetSingleDataById(id);
+            if (data == null)
             {
                 return HttpNotFound();
             }
-            return View(客戶銀行資訊);
+            else { return View(data); }
         }
 
         // GET: CustomerBank/Create
@@ -67,12 +53,11 @@ namespace MVCHomeWork2017.Controllers
         {
             if (ModelState.IsValid)
             {
-                db.客戶銀行資訊.Add(客戶銀行資訊);
-                db.SaveChanges();
+                repo.Add(客戶銀行資訊);
+                repo.UnitOfWork.Commit();
                 return RedirectToAction("Index");
             }
 
-            ViewBag.客戶Id = new SelectList(db.客戶資料, "Id", "客戶名稱", 客戶銀行資訊.客戶Id);
             return View(客戶銀行資訊);
         }
 

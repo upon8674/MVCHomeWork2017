@@ -29,24 +29,9 @@ namespace MVCHomeWork2017.Models
             return this.All().FirstOrDefault(p => p.Id == id);
         }
 
-        public IQueryable<客戶資料> Get客戶資料列表頁所有資料(string keyWord)
+        public IQueryable<客戶資料> GetDataList(string keyWord)
         {
-
-            //if (!String.IsNullOrEmpty(keyWord))
-            //{
-            //    var all = db.客戶資料.AsQueryable();
-            //    var data = all
-            //        .Where(p => p.客戶名稱.Contains(keyWord.Trim()) && !p.IsDelete)
-            //        .OrderByDescending(p => p.Id).ToList();
-            //    return View(data);
-            //}
-            //else
-            //{
-            //    var data = db.客戶資料.Where(p => !p.IsDelete).ToList();
-            //    return View(data);
-            //}
-
-
+                      
             IQueryable<客戶資料> all = this.All();
             if (String.IsNullOrEmpty(keyWord))
             {

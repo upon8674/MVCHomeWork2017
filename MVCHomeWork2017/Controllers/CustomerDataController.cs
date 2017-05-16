@@ -12,7 +12,7 @@ namespace MVCHomeWork2017.Controllers
 {
     public class CustomerDataController : Controller
     {
-        private CustomerEntities db = new CustomerEntities();
+        //private CustomerEntities db = new CustomerEntities();
 
         客戶資料Repository repo = RepositoryHelper.Get客戶資料Repository();
 
@@ -34,7 +34,7 @@ namespace MVCHomeWork2017.Controllers
 
         public ActionResult Index(string keyWord)
         {
-            return View(repo.Get客戶資料列表頁所有資料(keyWord));
+            return View(repo.GetDataList(keyWord));
         }
 
         // GET: CustomerData/Details/5
@@ -140,13 +140,13 @@ namespace MVCHomeWork2017.Controllers
             //return RedirectToAction("Index");                               
         }
 
-        protected override void Dispose(bool disposing)
-        {
-            if (disposing)
-            {
-                db.Dispose();
-            }
-            base.Dispose(disposing);
-        }
+        //protected override void Dispose(bool disposing)
+        //{
+        //    if (disposing)
+        //    {
+        //        db.Dispose();
+        //    }
+        //    base.Dispose(disposing);
+        //}
     }
 }
