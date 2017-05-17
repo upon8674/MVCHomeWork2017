@@ -12,7 +12,8 @@ namespace MVCHomeWork2017.Controllers
 {
     public class CustomerBankController : Controller
     {
-        private CustomerEntities db = new CustomerEntities();
+        //private CustomerEntities db = new CustomerEntities();
+        客戶資料Repository repoCustomerData = RepositoryHelper.Get客戶資料Repository();
         客戶銀行資訊Repository repo = RepositoryHelper.Get客戶銀行資訊Repository();
 
         // GET: CustomerBank
@@ -40,7 +41,7 @@ namespace MVCHomeWork2017.Controllers
         // GET: CustomerBank/Create
         public ActionResult Create()
         {
-            ViewBag.客戶Id = new SelectList(db.客戶資料, "Id", "客戶名稱");
+            ViewBag.客戶Id = new SelectList(repoCustomerData.All(), "Id", "客戶名稱");
             return View();
         }
 
@@ -57,7 +58,7 @@ namespace MVCHomeWork2017.Controllers
                 repo.UnitOfWork.Commit();
                 return RedirectToAction("Index");
             }
-
+            ViewBag.客戶Id = new SelectList(repoCustomerData.All(), "Id", "客戶名稱", 客戶銀行資訊.客戶Id);
             return View(客戶銀行資訊);
         }
 
@@ -68,13 +69,16 @@ namespace MVCHomeWork2017.Controllers
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            客戶銀行資訊 客戶銀行資訊 = db.客戶銀行資訊.Find(id);
-            if (客戶銀行資訊 == null)
+            var data = repo.GetSingleDataById(id);
+            if (data == null)
             {
                 return HttpNotFound();
             }
-            ViewBag.客戶Id = new SelectList(db.客戶資料, "Id", "客戶名稱", 客戶銀行資訊.客戶Id);
-            return View(客戶銀行資訊);
+            else
+            {
+                ViewBag.客戶Id = new SelectList(repoCustomerData.All(), "Id", "客戶名稱", data.客戶Id);
+                return View(data);
+            }
         }
 
         // POST: CustomerBank/Edit/5
@@ -86,11 +90,11 @@ namespace MVCHomeWork2017.Controllers
         {
             if (ModelState.IsValid)
             {
-                db.Entry(客戶銀行資訊).State = EntityState.Modified;
-                db.SaveChanges();
+                repo.Update(客戶銀行資訊);
+                repo.UnitOfWork.Commit();
                 return RedirectToAction("Index");
-            }
-            ViewBag.客戶Id = new SelectList(db.客戶資料, "Id", "客戶名稱", 客戶銀行資訊.客戶Id);
+            }            
+            ViewBag.客戶Id = new SelectList(repoCustomerData.All(), "Id", "客戶名稱", 客戶銀行資訊.客戶Id);
             return View(客戶銀行資訊);
         }
 
@@ -101,12 +105,12 @@ namespace MVCHomeWork2017.Controllers
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            客戶銀行資訊 客戶銀行資訊 = db.客戶銀行資訊.Find(id);
-            if (客戶銀行資訊 == null)
+            var data = repo.GetSingleDataById(id);
+            if (data == null)
             {
                 return HttpNotFound();
             }
-            return View(客戶銀行資訊);
+            else { return View(data); }
         }
 
         // POST: CustomerBank/Delete/5
@@ -114,21 +118,19 @@ namespace MVCHomeWork2017.Controllers
         [ValidateAntiForgeryToken]
         public ActionResult DeleteConfirmed(int id)
         {
-            客戶銀行資訊 bankData = db.客戶銀行資訊.Find(id);
-            bankData.IsDelete = true;
-            db.Entry(bankData).State = EntityState.Modified;
-            db.SaveChanges();          
-
+            客戶銀行資訊 data = repo.GetSingleDataById(id);
+            repo.Delete(data);
+            repo.UnitOfWork.Commit();
             return RedirectToAction("Index");
         }
 
-        protected override void Dispose(bool disposing)
-        {
-            if (disposing)
-            {
-                db.Dispose();
-            }
-            base.Dispose(disposing);
-        }
+        //protected override void Dispose(bool disposing)
+        //{
+        //    if (disposing)
+        //    {
+        //        db.Dispose();
+        //    }
+        //    base.Dispose(disposing);
+        //}
     }
 }
