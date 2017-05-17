@@ -200,6 +200,9 @@
     <Compile Include="Models\CustomerView.cs">
       <DependentUpon>Customer.tt</DependentUpon>
     </Compile>
+    <Compile Include="Models\CustomerView.Partial.cs">
+      <DependentUpon>EFGeneratePartialClass.tt</DependentUpon>
+    </Compile>
     <Compile Include="Models\CustomerViewRepository.cs">
       <DependentUpon>IRepository.EF6.tt</DependentUpon>
     </Compile>

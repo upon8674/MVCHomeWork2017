@@ -2,6 +2,7 @@ using System;
 using System.Linq;
 using System.Collections.Generic;
 using System.Data.Entity;
+using System.Web.Mvc;
 
 namespace MVCHomeWork2017.Models
 {   
@@ -44,6 +45,31 @@ namespace MVCHomeWork2017.Models
             }
             return all;
                
+        }
+
+        //public List<SelectListItem> GetcustomerTypeList()
+            public SelectList GetcustomerTypeList()
+        {
+            var ListData = base.All()
+                .GroupBy(p => new { type = p.CustomerType })
+                .Select(data => new 
+                {
+                    CustomerType = data.Key.type
+                });
+
+            //List<SelectListItem> items = new List<SelectListItem>();
+            //foreach (var type in ListData)
+            //{
+            //    items.Add(new SelectListItem()
+            //    {
+            //        Text=type.CustomerType,
+            //        Value = type.CustomerType,
+            //    });
+            //}
+
+            SelectList selectList = new SelectList(ListData, "CustomerType", "CustomerType");
+
+            return selectList;
         }
 
         public void Update(客戶資料 客戶資料)
