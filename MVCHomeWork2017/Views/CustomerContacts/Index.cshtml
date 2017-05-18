@@ -21,11 +21,16 @@
 
             }*@
 
-            @using (Html.BeginForm("Index", "CustomerData", FormMethod.Get))
+            @using (Html.BeginForm("Index", "CustomerContacts", FormMethod.Get))
             {
                 <div>
                     @Html.TextBox("keyWord", "", new { @class = "form-control" })
                     <br /><input type="submit" value="搜尋" class="btn btn-default" />
+                </div>
+                <div>
+                    <br />                    
+                    @Html.DropDownList("jobTitle", (SelectList)ViewBag.jobTitle, "全部", new { @class = "form-control", onchange = "this.form.submit();" })
+                    
                 </div>
 
             }
@@ -34,25 +39,34 @@
         </td>
     </tr>
     <tr>
-        <th>
-            @Html.DisplayNameFor(model => model.職稱)
-        </th>
-        <th>
-            @Html.DisplayNameFor(model => model.姓名)
-        </th>
-        <th>
-            @Html.DisplayNameFor(model => model.Email)
-        </th>
-        <th>
-            @Html.DisplayNameFor(model => model.手機)
-        </th>
-        <th>
-            @Html.DisplayNameFor(model => model.電話)
-        </th>
-        <th>
-            @Html.DisplayNameFor(model => model.客戶資料.客戶名稱)
-        </th>
-        <th></th>
+        @using (Html.BeginForm("Index", "CustomerContacts", FormMethod.Get))
+            {
+            <th>
+                @Html.DisplayNameFor(model => model.職稱)
+                <input type="submit" id="search-submit" value="" name="inputJob"
+                       style="background-image: url(../../Content/images/down.png); height:15px;border: solid 0px #000000; " onclick="changeSort(this)" />
+                @*<input id="image" type="image"  src="~/Content/images/up.png" onclick="changeSort(this)" />*@
+                <input id="hidjob" type="hidden" />
+
+                @*<input type="submit" value="排序" />*@
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.姓名)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Email)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.手機)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.電話)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.客戶資料.客戶名稱)
+            </th>
+            <th></th>
+        }
     </tr>
 
 @foreach (var item in Model) {
@@ -84,3 +98,24 @@
 }
 
 </table>
+<script>
+    function changeSort(obj)
+    {
+        //$('#' + obj.id).val('');
+
+        if ($('#hidjob').val() == "desc") {
+            $('#hidjob').val("asc");
+        } else {
+            $('#hidjob').val("desc");
+        }
+
+        //if ($('#' + obj.id).attr('src') == "/Content/images/up.png") {
+        //    alert('up');
+        //    $('#' + obj.id).attr('src', "/Content/images/down.png");
+        //} else {
+        //    alert('down');
+        //    $('#' + obj.id).attr('src', "/Content/images/up.png");
+        //}
+    }
+
+</script>

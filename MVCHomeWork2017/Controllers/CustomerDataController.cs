@@ -7,6 +7,7 @@ using System.Net;
 using System.Web;
 using System.Web.Mvc;
 using MVCHomeWork2017.Models;
+using PagedList;
 
 namespace MVCHomeWork2017.Controllers
 {
@@ -32,11 +33,15 @@ namespace MVCHomeWork2017.Controllers
         //    return View(data);
         //}
 
-        public ActionResult Index(string keyWord)
+        public ActionResult Index(string keyWord,string CustomerType,int page=1)
         {
             var customerTypeData = repo.GetcustomerTypeList();            
             ViewBag.CustomerType = customerTypeData;
-            return View(repo.GetDataList(keyWord));
+            
+            int pageSize = 2;
+            int currentPage = page < 1 ? 1 : page;
+            var data = repo.GetDataList(keyWord, CustomerType).ToPagedList(currentPage, pageSize);
+            return View(data);
         }
 
         // GET: CustomerData/Details/5
@@ -100,8 +105,10 @@ namespace MVCHomeWork2017.Controllers
         [ValidateAntiForgeryToken]
         public ActionResult Edit([Bind(Include = "Id,客戶名稱,統一編號,電話,傳真,地址,Email,CustomerType")] 客戶資料 客戶資料)
         {
+            //Todo  先撈取資料庫 確認是否有該ID的資料，才做下面的事
            if (ModelState.IsValid)
             {
+                客戶資料.IsDelete = false;
                 repo.Update(客戶資料);
                 repo.UnitOfWork.Commit();
                 return RedirectToAction("Index");
@@ -129,11 +136,22 @@ namespace MVCHomeWork2017.Controllers
         [ValidateAntiForgeryToken]
         public ActionResult DeleteConfirmed(int id)
         {
-
-            客戶資料 data = repo.GetSingleDataById(id);
-            repo.Delete(data);
-            repo.UnitOfWork.Commit();
-            return RedirectToAction("Index");
+            if (id == null)
+            {
+                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+            }
+            var data = repo.GetSingleDataById(id);
+            if (data == null)
+            {
+                return HttpNotFound();
+            }
+            else
+            {                
+                repo.Delete(data);
+                repo.UnitOfWork.Commit();
+                return RedirectToAction("Index");
+            }
+           
 
 
             //客戶資料 客戶資料 = db.客戶資料.Find(id);

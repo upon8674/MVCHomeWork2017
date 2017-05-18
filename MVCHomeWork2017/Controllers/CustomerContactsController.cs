@@ -17,9 +17,10 @@ namespace MVCHomeWork2017.Controllers
         客戶聯絡人Repository repo = RepositoryHelper.Get客戶聯絡人Repository();
 
         // GET: CustomerContacts
-        public ActionResult Index(string keyWord)
-        {
-            return View(repo.GetDataList(keyWord));
+        public ActionResult Index(string keyWord, string jobTitle)
+        {            
+            ViewBag.jobTitle = repo.GetjobTitleList();
+            return View(repo.GetDataList(keyWord, jobTitle));            
         }    
 
         // GET: CustomerContacts/Details/5

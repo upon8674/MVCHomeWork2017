@@ -3,13 +3,14 @@ using System.Linq;
 using System.Collections.Generic;
 using System.Data.Entity;
 using System.Web.Mvc;
+using PagedList;
 
 namespace MVCHomeWork2017.Models
 {   
 	public  class 客戶資料Repository : EFRepository<客戶資料>, I客戶資料Repository
 	{
         public override IQueryable<客戶資料> All()
-        {
+        {            
             return base.All().Where(p => !p.IsDelete);
         }
 
@@ -30,19 +31,32 @@ namespace MVCHomeWork2017.Models
             return this.All().FirstOrDefault(p => p.Id == id);
         }
 
-        public IQueryable<客戶資料> GetDataList(string keyWord)
+        public IQueryable<客戶資料> GetDataList(string keyWord,string CustomerType)
         {
                       
             IQueryable<客戶資料> all = this.All();
-            if (String.IsNullOrEmpty(keyWord))
+           
+
+            if (String.IsNullOrEmpty(CustomerType) && String.IsNullOrEmpty(keyWord))
             {
-                all = base.All().Where(p => !p.IsDelete);
+                all = base.All().Where(p => !p.IsDelete).OrderByDescending(p => p.Id);
             }
-            else
+            else if (String.IsNullOrEmpty(CustomerType) && !String.IsNullOrEmpty(keyWord))
             {
                 all = base.All().Where(p => p.客戶名稱.Contains(keyWord.Trim()) && !p.IsDelete)
+                  .OrderByDescending(p => p.Id);
+            }
+            else if (!String.IsNullOrEmpty(CustomerType) && String.IsNullOrEmpty(keyWord))
+            {
+                all = base.All().Where(p => p.CustomerType.Contains(CustomerType.Trim()) && !p.IsDelete)
                     .OrderByDescending(p => p.Id);
             }
+            else if (!String.IsNullOrEmpty(CustomerType) && !String.IsNullOrEmpty(keyWord))
+            {
+                all = base.All().Where(p => p.CustomerType.Contains(CustomerType.Trim()) && p.客戶名稱.Contains(keyWord.Trim()) && !p.IsDelete)
+                    .OrderByDescending(p => p.Id);
+            }
+
             return all;
                
         }
@@ -68,7 +82,7 @@ namespace MVCHomeWork2017.Models
             //}
 
             SelectList selectList = new SelectList(ListData, "CustomerType", "CustomerType");
-
+            
             return selectList;
         }
 

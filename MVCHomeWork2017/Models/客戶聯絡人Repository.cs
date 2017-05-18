@@ -2,6 +2,7 @@ using System;
 using System.Linq;
 using System.Collections.Generic;
 using System.Data.Entity;
+using System.Web.Mvc;
 
 namespace MVCHomeWork2017.Models
 {   
@@ -29,22 +30,58 @@ namespace MVCHomeWork2017.Models
             return this.All().FirstOrDefault(p => p.Id == id);
         }
 
-        public IQueryable<客戶聯絡人> GetDataList(string keyWord)
+        public IQueryable<客戶聯絡人> GetDataList(string keyWord, string jobTitle)
         {
 
             IQueryable<客戶聯絡人> all = this.All();
-            if (String.IsNullOrEmpty(keyWord))
+            //if (String.IsNullOrEmpty(keyWord))
+            //{
+            //    all = base.All().Where(p => !p.IsDelete);
+            //}
+            //else
+            //{
+            //    all = base.All().Where(p => p.姓名.Contains(keyWord.Trim()) && !p.IsDelete)
+            //        .OrderByDescending(p => p.Id);
+            //}
+
+            if (String.IsNullOrEmpty(jobTitle) && String.IsNullOrEmpty(keyWord))
             {
                 all = base.All().Where(p => !p.IsDelete);
             }
-            else
+            else if (String.IsNullOrEmpty(jobTitle) && !String.IsNullOrEmpty(keyWord))
             {
                 all = base.All().Where(p => p.姓名.Contains(keyWord.Trim()) && !p.IsDelete)
+                  .OrderByDescending(p => p.Id);
+            }
+            else if (!String.IsNullOrEmpty(jobTitle) && String.IsNullOrEmpty(keyWord))
+            {
+                all = base.All().Where(p => p.職稱.Contains(jobTitle.Trim()) && !p.IsDelete)
                     .OrderByDescending(p => p.Id);
             }
+            else if (!String.IsNullOrEmpty(jobTitle) && !String.IsNullOrEmpty(keyWord))
+            {
+                all = base.All().Where(p => p.職稱.Contains(jobTitle.Trim()) && p.姓名.Contains(keyWord.Trim()) && !p.IsDelete)
+                    .OrderByDescending(p => p.Id);
+            }
+
             return all;
 
         }
+
+        public SelectList GetjobTitleList()
+        {
+            var ListData = base.All()
+                .GroupBy(p => new { type = p.職稱 })
+                .Select(data => new
+                {
+                    jobTitle = data.Key.type
+                });
+            SelectList selectList = new SelectList(ListData, "jobTitle", "jobTitle");
+
+            return selectList;
+        }
+
+
 
         public void Update(客戶聯絡人 客戶聯絡人)
         {
