@@ -31,7 +31,7 @@ namespace MVCHomeWork2017.Models
             return this.All().FirstOrDefault(p => p.Id == id);
         }
 
-        public IQueryable<客戶資料> GetDataList(string keyWord,string CustomerType)
+        public IQueryable<客戶資料> GetDataList(string keyWord,string CustomerType,string columnName, string sorttype)
         {
                       
             IQueryable<客戶資料> all = this.All();
@@ -39,25 +39,44 @@ namespace MVCHomeWork2017.Models
 
             if (String.IsNullOrEmpty(CustomerType) && String.IsNullOrEmpty(keyWord))
             {
-                all = base.All().Where(p => !p.IsDelete).OrderByDescending(p => p.Id);
+                all = base.All().Where(p => !p.IsDelete);
             }
             else if (String.IsNullOrEmpty(CustomerType) && !String.IsNullOrEmpty(keyWord))
             {
-                all = base.All().Where(p => p.客戶名稱.Contains(keyWord.Trim()) && !p.IsDelete)
-                  .OrderByDescending(p => p.Id);
+                all = base.All().Where(p => p.客戶名稱.Contains(keyWord.Trim()) && !p.IsDelete);
             }
             else if (!String.IsNullOrEmpty(CustomerType) && String.IsNullOrEmpty(keyWord))
             {
-                all = base.All().Where(p => p.CustomerType.Contains(CustomerType.Trim()) && !p.IsDelete)
-                    .OrderByDescending(p => p.Id);
+                all = base.All().Where(p => p.CustomerType.Contains(CustomerType.Trim()) && !p.IsDelete);
+                    
             }
             else if (!String.IsNullOrEmpty(CustomerType) && !String.IsNullOrEmpty(keyWord))
             {
-                all = base.All().Where(p => p.CustomerType.Contains(CustomerType.Trim()) && p.客戶名稱.Contains(keyWord.Trim()) && !p.IsDelete)
-                    .OrderByDescending(p => p.Id);
+                all = base.All().Where(p => p.CustomerType.Contains(CustomerType.Trim()) && p.客戶名稱.Contains(keyWord.Trim()) && !p.IsDelete);
             }
 
-            return all;
+            
+            //以反射的方式動態給LINQ TO Entity 的orderby條件
+            var param = columnName;
+            var propertyInfo = typeof(客戶資料).GetProperty(param);
+            //因為IQueryable不支援C#方法  所以先轉型為Enumerable 根據動態條件排序完之後 再轉回IQueryable
+            var allEnumerable = all.AsEnumerable();
+
+
+            //排序
+            switch (sorttype)
+            {
+                case "asc":
+                    allEnumerable = allEnumerable.OrderBy(x => propertyInfo.GetValue(x, null));
+                    break;
+                case "desc":
+                    allEnumerable = allEnumerable.OrderByDescending(x => propertyInfo.GetValue(x, null));
+                    break;
+                default:
+                    allEnumerable = allEnumerable.OrderBy(x => propertyInfo.GetValue(x, null));
+                    break;                    
+            }
+            return allEnumerable.AsQueryable();
                
         }
 

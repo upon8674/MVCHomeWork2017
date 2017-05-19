@@ -33,16 +33,59 @@ namespace MVCHomeWork2017.Controllers
         //    return View(data);
         //}
 
-        public ActionResult Index(string keyWord,string CustomerType,int page=1)
-        {
+        public ActionResult Index(string keyWord,string CustomerType, string columnName, string sortType, int page=1)
+        {            
+            if (string.IsNullOrEmpty(columnName))
+            {
+                //預設值
+                ViewBag.columnName = "Id";
+                ViewBag.sorttype = "asc";
+                columnName = "Id";
+            }
+            else
+            {
+                //紀錄目前的排序欄位級升降冪屬性
+                ViewBag.columnName = columnName;
+                ViewBag.sorttype = sortType;               
+            }
+
+
             var customerTypeData = repo.GetcustomerTypeList();            
             ViewBag.CustomerType = customerTypeData;
             
-            int pageSize = 2;
+            int pageSize = 10;
             int currentPage = page < 1 ? 1 : page;
-            var data = repo.GetDataList(keyWord, CustomerType).ToPagedList(currentPage, pageSize);
+            var data = repo.GetDataList(keyWord, CustomerType, columnName, sortType).ToPagedList(currentPage, pageSize);
+            //var data1 = repo.GetDataList(keyWord, CustomerType, ViewBag.columnName+"", ViewBag.sorttype+"").ToPagedList(currentPage, pageSize);
             return View(data);
         }
+
+//         #region -- SortColumnLink --
+///// <summary>
+///// sort column HyperLink.
+///// </summary>
+///// <param name="columnName">Name of the column.</param>
+///// <returns></returns>
+//private MvcHtmlString SortColumnLink(string columnName)
+//{
+//    string result = string.Format("<a class=\"sortColumnLink\" href=\"{0}\" id=\"{0}_{1}\">{2}</a>", columnName, "asc", columnName);
+ 
+//    if (columnName.Equals(this.SortColumnName, StringComparison.OrdinalIgnoreCase))
+//    {
+//        string sortColumnLink = string.Format("<a class=\"sortColumnLink\" href=\"{0}\" id=\"{0}_{1}\" style=\"color: red;\">{2} {3}</a>",
+//            columnName,
+//            this.SortType,
+//            columnName,
+//            this.SortType.Equals("asc", StringComparison.OrdinalIgnoreCase) ? "▲" : "▼");
+ 
+//        result = sortColumnLink;
+//    }
+ 
+//    return MvcHtmlString.Create(result);
+//} 
+//#endregion
+
+
 
         // GET: CustomerData/Details/5
         public ActionResult Details(int? id)

@@ -41,9 +41,14 @@
     </tr>
     
 <tr>
-        <th>
-            @Html.DisplayNameFor(model => model.FirstOrDefault().客戶名稱)
-        </th>
+@using (Html.BeginForm("Index", "CustomerData", FormMethod.Get,new { id = "formsort" }))
+{
+    <th>
+        <span></span>
+        <a href=""  value="客戶名稱" name="Submit"  onclick="change(this)">客戶名稱</a>
+        @*<input type="submit" value="客戶名稱" name="Submit" id="frm1_columnName" onclick="change(this)"  />*@      
+        @*@Html.DisplayNameFor(model => model.FirstOrDefault().客戶名稱)*@
+    </th>
         <th>
             @Html.DisplayNameFor(model => model.FirstOrDefault().統一編號)
         </th>
@@ -62,8 +67,13 @@
     <th>
         @Html.DisplayNameFor(model => model.FirstOrDefault().CustomerType)
     </th>
-        <th></th>
+        <th>
+            <input type="hidden" name="columnName" value="@ViewBag.columnName" id="hidColumnName" />
+            <input type="hidden" name="sorttype" value="@ViewBag.sorttype" id="hidSortType" />
+        </th>
+}
     </tr>
+
 
     @foreach (var item in Model)
     {
@@ -99,3 +109,33 @@
 
 </table>
 @Html.PagedListPager(Model, page => Url.Action("Index", new { page }))
+
+<script>
+
+    //紀錄目前排序的欄位及昇冪降冪
+    $(document).ready(function () {
+        $('#hidColumnName').val('@ViewBag.columnName');
+        $('#hidSortType').val('@ViewBag.sorttype');
+
+    });
+
+    //按下標頭排序  存放標頭值  傳至後端
+    function change(obj) {
+        $('#hidColumnName').val($('#'+obj.id).val());
+        if ($('#' + obj.id).val() == $('#hidColumnName').val()) {
+            if ( $('#hidSortType').val() == 'asc') {
+                $('#hidSortType').val('desc');
+            } else { $('#hidSortType').val('asc'); }
+        } else {
+            //換欄位
+            $('#hidSortType').val('asc');
+        }
+        document.getElementById("formsort").submit();
+        //this.document.forms("formsort").submit();
+        //$('#' + obj.id).closest("form").submit();
+        //obj.form.submit();
+        
+    }
+
+
+</script>
