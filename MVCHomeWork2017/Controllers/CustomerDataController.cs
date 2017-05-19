@@ -38,15 +38,26 @@ namespace MVCHomeWork2017.Controllers
             if (string.IsNullOrEmpty(columnName))
             {
                 //預設值
-                ViewBag.columnName = "Id";
-                ViewBag.sorttype = "asc";
+                //ViewBag.columnName = "Id";
+                //ViewBag.sorttype = "asc";
+                TempData["sortType"]= "asc";
                 columnName = "Id";
             }
             else
             {
                 //紀錄目前的排序欄位級升降冪屬性
-                ViewBag.columnName = columnName;
-                ViewBag.sorttype = sortType;               
+
+                //if (ViewBag.columnName == columnName)
+                //{
+                //    ViewBag.sorttype = ViewBag.sorttype == "asc" ? "desc" : "asc";                    
+                //}
+                //else
+                //{
+                //    ViewBag.columnName = columnName;
+                //    ViewBag.sorttype = "asc";
+                //}
+                TempData["sortType"] = sortType == "asc" ? "desc" : "asc";
+                sortType = TempData["sortType"]+"";
             }
 
 

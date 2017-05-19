@@ -45,7 +45,7 @@
 {
     <th>
         <span></span>
-        <a href=""  value="客戶名稱" name="Submit"  onclick="change(this)">客戶名稱</a>
+        <a href="~/CustomerData/Index/?columnName=客戶名稱&sortType=@TempData["sortType"]"   >客戶名稱</a>
         @*<input type="submit" value="客戶名稱" name="Submit" id="frm1_columnName" onclick="change(this)"  />*@      
         @*@Html.DisplayNameFor(model => model.FirstOrDefault().客戶名稱)*@
     </th>
