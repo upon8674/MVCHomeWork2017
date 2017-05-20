@@ -1,4 +1,5 @@
-﻿using System;
+﻿using MVCHomeWork2017.Models;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Web;
@@ -8,6 +9,7 @@ namespace MVCHomeWork2017.Controllers
 {
     public class HomeController : Controller
     {
+        
         public ActionResult Index()
         {
             return View();
@@ -26,5 +28,18 @@ namespace MVCHomeWork2017.Controllers
 
             return View();
         }
+        public ActionResult GetJson()
+        {
+            CustomerEntities db = new CustomerEntities();
+            db.Configuration.LazyLoadingEnabled = false;
+
+
+            客戶資料Repository repoCustomerData = RepositoryHelper.Get客戶資料Repository();
+            //repoCustomerData.All().
+            return Json(repoCustomerData.All(),
+                JsonRequestBehavior.AllowGet);
+        }
+
+      
     }
 }
