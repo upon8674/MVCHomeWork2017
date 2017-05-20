@@ -50,22 +50,28 @@
         @*@Html.DisplayNameFor(model => model.FirstOrDefault().客戶名稱)*@
     </th>
         <th>
-            @Html.DisplayNameFor(model => model.FirstOrDefault().統一編號)
+            <a href="~/CustomerData/Index/?columnName=統一編號&sortType=@TempData["sortType"]">統一編號</a>
+            @*@Html.DisplayNameFor(model => model.FirstOrDefault().統一編號)*@
         </th>
         <th>
-            @Html.DisplayNameFor(model => model.FirstOrDefault().電話)
+            <a href="~/CustomerData/Index/?columnName=電話&sortType=@TempData["sortType"]">電話</a>
+            @*@Html.DisplayNameFor(model => model.FirstOrDefault().電話)*@
         </th>
         <th>
-            @Html.DisplayNameFor(model => model.FirstOrDefault().傳真)
+            <a href="~/CustomerData/Index/?columnName=傳真&sortType=@TempData["sortType"]">傳真</a>
+            @*@Html.DisplayNameFor(model => model.FirstOrDefault().傳真)*@
         </th>
         <th>
-            @Html.DisplayNameFor(model => model.FirstOrDefault().地址)
+            <a href="~/CustomerData/Index/?columnName=地址&sortType=@TempData["sortType"]">地址</a>
+            @*@Html.DisplayNameFor(model => model.FirstOrDefault().地址)*@
         </th>
         <th>
-            @Html.DisplayNameFor(model => model.FirstOrDefault().Email)
+            <a href="~/CustomerData/Index/?columnName=Email&sortType=@TempData["sortType"]">Email</a>
+            @*@Html.DisplayNameFor(model => model.FirstOrDefault().Email)*@
         </th>
     <th>
-        @Html.DisplayNameFor(model => model.FirstOrDefault().CustomerType)
+        <a href="~/CustomerData/Index/?columnName=CustomerType&sortType=@TempData["sortType"]">CustomerType</a>
+        @*@Html.DisplayNameFor(model => model.FirstOrDefault().CustomerType)*@
     </th>
         <th>
             <input type="hidden" name="columnName" value="@ViewBag.columnName" id="hidColumnName" />
